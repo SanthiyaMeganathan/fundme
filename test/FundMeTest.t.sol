@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.19;
+pragma solidity 0.8.27;
 
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/Fundme.sol";
+import {DeployFundme} from "../script/DeployFundme.s.sol";
 
 contract FundMeTest is Test {
     FundMe fundme;
 
     function setUp() external {
-        fundme = new FundMe();
+        fundme = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
     }
 
     function testMinimumDollarIsFiver() public view {
@@ -23,5 +24,10 @@ contract FundMeTest is Test {
 
         console.log(address(this));
         assertEq(fundme.i_owner(), address(this));
+    }
+
+    function testPriceFeedVersionIsAccurate() public view {
+        uint256 version = fundme.getVersion();
+        assertEq(version, 4);
     }
 }
