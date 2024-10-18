@@ -26,8 +26,15 @@ contract FundMeTest is Test {
         assertEq(fundme.i_owner(), address(this));
     }
 
-    function testPriceFeedVersionIsAccurate() public view {
+    function testPriceFeedVersionIsAccurate() public {
         uint256 version = fundme.getVersion();
-        assertEq(version, 4);
+        console.log("Price Feed Version:", version);
+        // Change the expected version based on the actual price feed you're using
+        uint256 expectedVersion = 4; // Assuming version 4 is the expected one for your setup
+        assertEq(
+            version,
+            expectedVersion,
+            "Price feed version does not match the expected version."
+        );
     }
 }

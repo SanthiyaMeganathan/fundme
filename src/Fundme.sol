@@ -32,6 +32,7 @@ contract FundMe {
     function getVersion() public view returns (uint256) {
        
         return s_priceFeed.version();
+        
     }
 
     modifier onlyOwner() {
