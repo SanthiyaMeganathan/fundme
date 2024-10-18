@@ -5,8 +5,8 @@ import {Script} from "forge-std/Script.sol";
 import {MockV3Aggregator} from "../test/mocks/MockV3Aggregator.sol";
 
 contract HelperConfig is Script {
-    uint8 public constant DECIMAL = 8;
-    int256 public constant INITIAL_PRICE = 2000e8;
+    uint8 public DECIMAL;
+    int256 public INITIAL_VALUE;
 
     //if we are on a local anvil, we deploy mocks
     //otherwise , grab the existing address from live network
@@ -22,7 +22,7 @@ contract HelperConfig is Script {
         } else if (block.chainid == 1) {
             activeNetworkConfig = getMainnetEthConfig();
         } else {
-            activeNetworkConfig = getorCreateAnvilEthConfig();
+            activeNetworkConfig = getAnvilEthConfig();
         }
     }
 
@@ -34,17 +34,12 @@ contract HelperConfig is Script {
         return sepolliaConfig;
     }
 
-    function getorCreateAnvilEthConfig() public returns (NetworkConfig memory) {
-        if (activeNetworkConfig.priceFeed != address(0)) {
-            return activeNetworkConfig;
-        }
-
+    function getAnvilEthConfig() public returns (NetworkConfig memory) {
         vm.startBroadcast();
         MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
             DECIMAL,
-            INITIAL_PRICE
+            INITIAL_VALUE
         );
-        // MockV3Aggregator mockPriceFeed = new MockV3Aggregator(8, 2000e8); MAGIC NUMBER
 
         vm.stopBroadcast();
         NetworkConfig memory anvilConfig = NetworkConfig({
